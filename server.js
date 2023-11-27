@@ -11,7 +11,9 @@ var corsConfig = {
 
 server.use(cors(corsConfig));
 server.use(express.json()); //Leer peticiones de tipo JSON
-server.use(express.urlencoded({ extended: true })); //Lerr peticiones de tipo Form
+server.use(express.urlencoded({ extended: true })); //Leer peticiones de tipo Form
+server.use(require('./app/routes/auth.routes'));
+server.use(require('./app/routes/user.routes'));
 
 const Role = db.role;
 
