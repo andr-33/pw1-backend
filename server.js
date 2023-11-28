@@ -40,10 +40,6 @@ function initializeRoles() {
     });
 }
 
-server.get('/', (req, res) => {
-    res.json({ message: 'Mi primera ruta' });
-});
-
 const PORT = process.env.PORT || 8082;
 server.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
