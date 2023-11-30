@@ -3,6 +3,7 @@ const bcrypt = require('bcryptjs');
 const Op = db.Sequelize.Op;
 
 const User = db.user;
+const Role = db.role;
 
 const userController = {};
 
