@@ -7,41 +7,47 @@ const Role = db.role;
 
 const userController = {};
 
-userController.signup = (req, res) => {
-    User.create({
-        username: req.body.username,
-        email: req.body.email,
-        password: bcrypt.hashSync(req.body.password, 8)
-    }).then(user => {
+userController.signup = async (req, res) => {
+
+    let transaction = await db.sequelize.transaction();
+
+    try {
+        const user = await User.create({
+            username: req.body.username,
+            email: req.body.email,
+            password: bcrypt.hashSync(req.body.password, 8)
+        }, { transaction });
+
         if (req.body.roles) {
-            Role.findAll({
+            const roles = await Role.findAll({
                 where: {
                     name: {
                         [Op.or]: req.body.roles
                     }
                 }
-            }).then(roles => {
-                user.setRoles(roles)
-                    .then(() => {
-                        res.status(201).send({
-                            message: 'The user was registered successfully :)'
-                        });
-                    });
-            });
+            }, { transaction });
+
+            await user.setRoles(roles, { transaction });
         }
         else {
-            user.setRoles([1])
-                .then(() => {
-                    res.status(201).send({
-                        message: 'The user was registered successfully :)'
-                    });
-                });
+            await user.setRoles([1], { transaction });
         }
-    }).catch(err => {
+
+        await transaction.commit();
+
+        res.status(201).send({
+            message: 'The user was registered successfully :)'
+        });
+    }
+    catch (err) {
+        if (transaction) {
+            await transaction.rollback();
+        }
+
         res.status(500).send({
             message: err.message
         });
-    });
+    }
 };
 
 userController.allAccess = (req, res) => {
