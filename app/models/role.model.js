@@ -13,3 +13,5 @@ const roleModel = (sequelize, Sequelize) => {
 
     return Role;
 };
+
+module.exports = roleModel;

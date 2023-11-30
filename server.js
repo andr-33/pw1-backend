@@ -11,7 +11,9 @@ var corsConfig = {
 
 server.use(cors(corsConfig));
 server.use(express.json()); //Leer peticiones de tipo JSON
-server.use(express.urlencoded({ extended: true })); //Lerr peticiones de tipo Form
+server.use(express.urlencoded({ extended: true })); //Leer peticiones de tipo Form
+server.use(require('./app/routes/auth.routes'));
+server.use(require('./app/routes/user.routes'));
 
 const Role = db.role;
 
@@ -37,10 +39,6 @@ function initializeRoles() {
         name: 'admin'
     });
 }
-
-server.get('/', (req, res) => {
-    res.json({ message: 'Mi primera ruta' });
-});
 
 const PORT = process.env.PORT || 8082;
 server.listen(PORT, () => {
