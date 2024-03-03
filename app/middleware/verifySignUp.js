@@ -13,7 +13,7 @@ verifySignUp.checkDuplicateUsernameOrEmail = (req, res, next) => {
         }
     }).then(user => {
         if (user) {
-            return res.status(400).send({
+            return res.status(400).json({
                 message: 'Ups! Username is already in use, please try using another username'
             });
         }
